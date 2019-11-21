@@ -1,0 +1,72 @@
+---
+- name: Add some address objects to the firewall
+  hosts: PA
+  connection: local
+  gather_facts: False
+
+  roles:
+    - role: PaloAltoNetworks.paloaltonetworks
+
+  tasks:
+  - name: Grab the credentials from ansible-vault
+    read_csv:
+      path: txt/object_sample2.csv
+    register: objects 
+
+  - name: debug csv
+    debug:
+      msg: "{{ objects }}"
+
+  - name: Create object Test-One
+    panos_address_object:
+      provider: '{{ cli }}'
+      name: '{{ object.ObjectName }}'
+      value: '{{ object.IPaddress }}'
+      description: 'Description One'
+#    with_items: "{{ panobjects }}" 
+#    with_items: "{{ objects }}"
+    loop: "{{ objects.list }}"
+    loop_control:
+      loop_var: object
+
+  vars:
+    cli:
+      ip_address: '10.121.1.11'
+      username: 'admin'
+      password: 'admin'
+#    panobjects:
+##      - name: 'testname3'
+#        value: '1.1.1.3' 
+#      - name: 'testname4'
+#        value: '1.1.1.4'
+#      - name: 'testname5'
+#        value: '1.1.1.5'
+
+#- name: Create object 'Test-Two'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Two'
+#    address_type: 'ip-range'
+#    value: '1.1.1.1-2.2.2.2'
+#    description: 'Description Two'
+#    tag: ['SI']
+#
+#- name: Create object 'Test-Three'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Three'
+#    address_type: 'fqdn'
+#    value: 'foo.bar.baz'
+#    description: 'Description Three'
+#
+#- name: Delete object 'Test-Two'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Two'
+#    state: 'absent'
