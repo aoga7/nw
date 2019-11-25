@@ -1,0 +1,82 @@
+---
+#- name: Add Policy to the firewall
+#  hosts: PA
+#  connection: local
+#  gather_facts: True
+
+#  roles:
+#    - role: PaloAltoNetworks.paloaltonetworks
+
+#tasks:
+- name: Grab the credentials from ansible-vault
+  read_csv:
+    path: /etc/ansible/txt/policy_sample.csv
+    delimiter: ';'
+  register: policies 
+
+- name: debug csv
+  debug:
+    msg: "{{ policies }}"
+
+- name: Create Policy 
+  panos_security_rule:
+    provider: '{{ cli }}'
+    state: "{{ policy.Operation }}"
+    rule_name: '{{ policy.RuleName }}'
+    source_zone: '{{ policy.SrcZone }}'
+    source_ip: '{{ policy.SrcAddress }}'
+    destination_zone: '{{ policy.DstZone}}'
+    destination_ip: '{{ policy.DstAddress }}'
+    application: '{{ policy.Application }}'
+    service: '{{ policy.Service }}'
+    action: '{{ policy.Action }}'
+    description: 'Description One'
+#    with_items: "{{ panobjects }}" 
+#    with_items: "{{ objects }}"
+  loop: "{{ policies.list }}"
+  loop_control:
+    loop_var: policy
+
+#  vars:
+#    cli:
+#      ip_address: "{{ inventory_hostname }}"
+#      username: "{{ ansible_user }}"
+#      password: "{{ ansible_password }}"
+
+
+#    panobjects:
+##      - name: 'testname3'
+#        value: '1.1.1.3' 
+#      - name: 'testname4'
+#        value: '1.1.1.4'
+#      - name: 'testname5'
+#        value: '1.1.1.5'
+
+#- name: Create object 'Test-Two'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Two'
+#    address_type: 'ip-range'
+#    value: '1.1.1.1-2.2.2.2'
+#    description: 'Description Two'
+#    tag: ['SI']
+#
+#- name: Create object 'Test-Three'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Three'
+#    address_type: 'fqdn'
+#    value: 'foo.bar.baz'
+#    description: 'Description Three'
+#
+#- name: Delete object 'Test-Two'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Two'
+#    state: 'absent'

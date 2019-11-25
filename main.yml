@@ -1,0 +1,77 @@
+---
+- name: Add some address objects to the firewall
+  hosts: PA
+  connection: local
+  gather_facts: False
+
+  roles:
+    - PaloAltoNetworks.paloaltonetworks
+#    - role: PaloAltoNetworks.paloaltonetworks
+#    - role: fw
+
+  tasks:
+   - include_role:
+       name: "{{item}}"
+#       name: fw/address_object
+#   - include_role:
+#       name: fw/commit
+     loop:
+       - fw/address_object
+       - fw/commit
+       - fw/policy
+#  - import_tasks: "/etc/ansible/roles/fw/address_object.yml"
+#  - include_tasks: "roles/fw/address_object.yml"
+#  tasks:
+#  - name: Grab the credentials from ansible-vault
+#    read_csv:
+#      path: txt/object_sample2.csv
+#    register: objects 
+#
+#  - name: debug csv
+#    debug:
+#      msg: "{{ objects }}"
+
+#  - name: Create object Test-One
+#    panos_address_object:
+#      provider: '{{ cli }}'
+#      name: '{{ object.ObjectName }}'
+#      value: '{{ object.IPaddress }}'
+#      description: 'Description One'
+#    loop: "{{ objects.list }}"
+#    loop_control:
+#      loop_var: object
+
+  vars:
+    cli:
+      ip_address: '{{ inventory_hostname }}'
+      username: '{{ ansible_user }}'
+      password: '{{ansible_password}}'
+
+#- name: Create object 'Test-Two'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Two'
+#    address_type: 'ip-range'
+#    value: '1.1.1.1-2.2.2.2'
+#    description: 'Description Two'
+#    tag: ['SI']
+#
+#- name: Create object 'Test-Three'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Three'
+#    address_type: 'fqdn'
+#    value: 'foo.bar.baz'
+#    description: 'Description Three'
+#
+#- name: Delete object 'Test-Two'
+#  panos_address_object:
+#    ip_address: '{{ fw_ip_address }}'
+#    username: '{{ fw_username }}'
+#    password: '{{ fw_password }}'
+#    name: 'Test-Two'
+#    state: 'absent'

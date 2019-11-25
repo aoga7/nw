@@ -1,0 +1,3 @@
+Operation;RuleName;SrcZone;SrcAddress;DstZone;DstAddress;Application;Service;Action
+present;TestRule1;trustZone;1.1.1.1,2.2.2.2/24,3.3.3.3/32;untrustZone;2.2.2.2;any;any,service-http;allow
+absent;TestRule2;trustZone;1.1.1.2,2.2.2.3/24,3.3.3.4/32;untrustZone;2.2.2.5;any;any,service-http;deny

@@ -1,0 +1,2 @@
+Operation;RuleName;SrcZone;SrcAddress;DstZone;DstAddress;Application;Service;Action
+Add;TestRule2;ctr;1.1.1.2;Untrust;2.2.2.5;udp-5220,5221;
